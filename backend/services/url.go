@@ -7,9 +7,9 @@ type UrlStruct struct {
 }
 
 type UrlService interface {
-	Generate(context.Context, string) (UrlStruct, error)
+	Generate(context.Context, UrlStruct) (UrlStruct, error)
 
-	Get(context.Context, string) (UrlStruct, error)
+	Get(context.Context, UrlStruct) (UrlStruct, error)
 
-	Delete(context.Context, string) error
+	Delete(context.Context, UrlStruct) error
 }

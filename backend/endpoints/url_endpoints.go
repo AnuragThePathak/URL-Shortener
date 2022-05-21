@@ -13,7 +13,8 @@ type UrlEndpoints struct {
 }
 
 func (u *UrlEndpoints) Register(r chi.Router) {
-	r.Post("/url", u.Generate)
+	r.Post("/", u.Generate)
+	r.Get("/{id}", u.Get)
 }
 
 func (u *UrlEndpoints) Generate(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +25,24 @@ func (u *UrlEndpoints) Generate(w http.ResponseWriter, r *http.Request) {
 			R:          r,
 			ReqBodyObj: &url,
 			EndpointLogic: func() (interface{}, error) {
-				return u.Service.Generate(r.Context(), url.Url)
+				return u.Service.Generate(r.Context(), url)
+			},
+		},
+	)
+}
+
+func (u *UrlEndpoints) Get(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	url := services.UrlStruct{
+		Url: id,
+	}
+	server.ServeRequest(
+		server.InboundRequest{
+			W: w,
+			R: r,
+			ReqBodyObj: &url,
+			EndpointLogic: func() (interface{}, error) {
+				return u.Service.Get(r.Context(), url)
 			},
 		},
 	)
