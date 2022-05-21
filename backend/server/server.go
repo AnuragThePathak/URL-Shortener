@@ -11,23 +11,24 @@ import (
 	"time"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 )
 
 type ServerConfig struct {
-	Port        int
-	TLSEnabled  bool
 	TLSCertPath string
 	TLSKeyPath  string
+	Port        int
+	TLSEnabled  bool
 }
 
 type Server interface {
-	ListenAndServe(ctx context.Context)
+	ListenAndServe()
 }
 
 type server struct {
-	config  ServerConfig
 	handler http.Handler
+	config  ServerConfig
 }
 
 func NewServer(endpoints []Endpoints, config *ServerConfig) Server {
@@ -39,6 +40,7 @@ func NewServer(endpoints []Endpoints, config *ServerConfig) Server {
 	}
 
 	router := chi.NewRouter()
+	router.Use(middleware.Logger)
 
 	for _, e := range endpoints {
 		e.Register(router)
@@ -57,7 +59,7 @@ func NewServer(endpoints []Endpoints, config *ServerConfig) Server {
 	}
 }
 
-func (s *server) ListenAndServe(ctx context.Context) {
+func (s *server) ListenAndServe() {
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%d", s.config.Port),
 		Handler: s.handler,
