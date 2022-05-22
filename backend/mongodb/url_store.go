@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/AnuragThePathak/url-shortener/backend/service"
@@ -25,7 +26,7 @@ func NewUrlStore(database *mongo.Database) (service.UrlStore, error) {
 	collection.Indexes().CreateMany(
 		context, []mongo.IndexModel{
 			{
-				Keys: bson.D{ {"original", 1}, {"shortened", 1}},
+				Keys: bson.D{{"original", 1}, {"shortened", 1}},
 				Options: &options.IndexOptions{
 					Unique: &isUnique,
 				},
@@ -55,11 +56,18 @@ func (u *urlStore) Create(ctx context.Context, urlInfo service.UrlInfo) error {
 	return err
 }
 
-func (u *urlStore) Get(ctx context.Context, url string) (service.UrlStruct, error) {
+func (u *urlStore) Get(ctx context.Context, url string) (string, error) {
 	opts := options.FindOne()
-	opts.SetProjection(bson.M{"shortened": 1})
+	opts.SetProjection(bson.M{"original": 1, "_id": 0})
 
-	var res service.UrlStruct
-	err := u.collection.FindOne(ctx, bson.M{"orginal": url}, opts).Decode(&res)
-	return res, err
+	var res bson.M
+	if err := u.collection.FindOne(ctx, bson.M{"shortened": url}, opts).
+		Decode(&res); err != nil {
+		return "", err
+	}
+	str, isString := res["original"].(string)
+	if !isString {
+		return "", errors.New("invalid url")
+	}
+	return str, nil
 }

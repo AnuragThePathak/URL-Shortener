@@ -67,7 +67,7 @@ func (u *urlService) Get(
 	if err != nil {
 		return UrlStruct{}, err
 	}
-	return res, nil
+	return UrlStruct{Url: res}, nil
 }
 
 type UrlStore interface {
@@ -75,5 +75,5 @@ type UrlStore interface {
 
 	Create(context.Context, UrlInfo) error
 
-	Get(context.Context, string) (UrlStruct, error)
+	Get(context.Context, string) (string, error)
 }
