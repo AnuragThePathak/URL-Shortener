@@ -6,6 +6,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/go-chi/chi/v5"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -44,7 +45,11 @@ func ServeRequest(req InboundRequest) {
 		case errors.Is(err, mongo.ErrNoDocuments):
 			WriteAPIResponse(req.W, http.StatusNotFound, err)
 		default:
-			WriteAPIResponse(req.W, http.StatusInternalServerError, err)
+			if _, ok := err.(*url.Error); ok {
+				WriteAPIResponse(req.W, http.StatusBadRequest, err)
+			} else {
+				WriteAPIResponse(req.W, http.StatusInternalServerError, err)
+			}
 		}
 		return
 	}

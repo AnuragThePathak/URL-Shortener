@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"net/url"
 	"time"
 
 	"github.com/osamingo/indigo"
@@ -37,6 +38,9 @@ func NewUrlService(urlStore UrlStore, ig *indigo.Generator) UrlService {
 
 func (u *urlService) Generate(
 	ctx context.Context, urlStruct UrlStruct) (UrlStruct, error) {
+	if _, err := url.ParseRequestURI(urlStruct.Url); err != nil {
+		return UrlStruct{}, err
+	}
 	exists, err := u.urlStore.CheckIfExists(ctx, urlStruct.Url)
 	if err != nil {
 		return UrlStruct{}, err
