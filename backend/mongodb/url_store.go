@@ -3,15 +3,12 @@ package mongodb
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/AnuragThePathak/url-shortener/backend/service"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-const createIndexTimeout = 5 * time.Second
 
 type urlStore struct {
 	collection *mongo.Collection
@@ -56,16 +53,22 @@ func (u *urlStore) Create(ctx context.Context, urlInfo service.UrlInfo) error {
 	return err
 }
 
-func (u *urlStore) Get(ctx context.Context, url string) (string, error) {
+func (u *urlStore) Get(ctx context.Context, url, urlType string) (string, error) {
+	var oppositeType string
+	if urlType == service.ShortenedType {
+		oppositeType = service.OrginalType
+	} else {
+		oppositeType = service.ShortenedType
+	}
 	opts := options.FindOne()
-	opts.SetProjection(bson.M{"original": 1, "_id": 0})
+	opts.SetProjection(bson.M{oppositeType: 1, "_id": 0})
 
 	var res bson.M
-	if err := u.collection.FindOne(ctx, bson.M{"shortened": url}, opts).
+	if err := u.collection.FindOne(ctx, bson.M{urlType: url}, opts).
 		Decode(&res); err != nil {
 		return "", err
 	}
-	str, isString := res["original"].(string)
+	str, isString := res[oppositeType].(string)
 	if !isString {
 		return "", errors.New("invalid url")
 	}

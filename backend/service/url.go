@@ -42,7 +42,11 @@ func (u *urlService) Generate(
 		return UrlStruct{}, err
 	}
 	if exists {
-		return u.Get(ctx, urlStruct)
+		res, err := u.urlStore.Get(ctx, urlStruct.Url, OrginalType)
+		if err != nil {
+			return UrlStruct{}, err
+		}
+		return UrlStruct{Url: res}, nil
 	}
 
 	id, err := u.ig.NextID()
@@ -63,7 +67,7 @@ func (u *urlService) Generate(
 func (u *urlService) Get(
 	ctx context.Context, urlStruct UrlStruct,
 ) (UrlStruct, error) {
-	res, err := u.urlStore.Get(ctx, urlStruct.Url)
+	res, err := u.urlStore.Get(ctx, urlStruct.Url, ShortenedType)
 	if err != nil {
 		return UrlStruct{}, err
 	}
@@ -75,5 +79,5 @@ type UrlStore interface {
 
 	Create(context.Context, UrlInfo) error
 
-	Get(context.Context, string) (string, error)
+	Get(context.Context, string, string) (string, error)
 }

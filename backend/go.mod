@@ -4,6 +4,8 @@ go 1.18
 
 require github.com/osamingo/indigo v1.1.0
 
+require github.com/pkg/errors v0.9.1 // indirect
+
 require (
 	github.com/AnuragThePathak/my-go-packages v0.0.0-20220522112212-3794a90b13a9
 	github.com/google/go-cmp v0.5.8 // indirect
@@ -18,7 +20,6 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
-	github.com/pkg/errors v0.9.1
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.0.2 // indirect
 	github.com/xdg-go/stringprep v1.0.2 // indirect

@@ -3,11 +3,11 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -65,7 +65,7 @@ func WriteAPIResponse(
 
 	if res != nil {
 		if err := json.NewEncoder(w).Encode(res); err != nil {
-			log.Println(errors.Wrap(err, "error marshaling response"))
+			log.Println(err)
 		}
 	}
 }
