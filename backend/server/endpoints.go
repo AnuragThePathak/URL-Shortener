@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
 )
 
@@ -14,7 +14,7 @@ type Endpoints interface {
 	Register(r chi.Router)
 }
 
-func ReadAndValidateRequestBody(
+func ReadRequestBody(
 	w http.ResponseWriter,
 	r *http.Request,
 	bodyObj interface{},
@@ -30,7 +30,7 @@ func ReadAndValidateRequestBody(
 
 func ServeRequest(req InboundRequest) {
 	if req.ReqBodyObj != nil {
-		if !ReadAndValidateRequestBody(req.W, req.R, req.ReqBodyObj) {
+		if !ReadRequestBody(req.W, req.R, req.ReqBodyObj) {
 			return
 		}
 	}
@@ -53,7 +53,7 @@ func ServeRequest(req InboundRequest) {
 func WriteAPIResponse(
 	w http.ResponseWriter,
 	statusCode int,
-	response interface{},
+	res interface{},
 ) {
 	if statusCode == 0 {
 		statusCode = http.StatusOK
@@ -61,8 +61,8 @@ func WriteAPIResponse(
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 
-	if response != nil {
-		if err := json.NewEncoder(w).Encode(response); err != nil {
+	if res != nil {
+		if err := json.NewEncoder(w).Encode(res); err != nil {
 			log.Println(errors.Wrap(err, "error marshaling response"))
 		}
 	}

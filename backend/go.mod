@@ -2,12 +2,10 @@ module github.com/AnuragThePathak/url-shortener/backend
 
 go 1.18
 
-require (
-	github.com/go-chi/chi v1.5.4
-	github.com/osamingo/indigo v1.1.0
-)
+require github.com/osamingo/indigo v1.1.0
 
 require (
+	github.com/AnuragThePathak/my-go-packages v0.0.0-20220522112212-3794a90b13a9
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/osamingo/base58 v1.0.0 // indirect
 	github.com/sony/sonyflake v1.0.1-0.20200827011719-848d664ceea4 // indirect

@@ -1,3 +1,5 @@
+github.com/AnuragThePathak/my-go-packages v0.0.0-20220522112212-3794a90b13a9 h1:9cdInO3dEN/0TL1QVOvqAzmrfGa5ieuqGncnUFmPmN8=
+github.com/AnuragThePathak/my-go-packages v0.0.0-20220522112212-3794a90b13a9/go.mod h1:4hS6vx9+D/9V/WOAqAEuqhUD6gAf+SuaoHmDH8ebaeg=
 github.com/brigadecore/brigade-foundations v0.3.0 h1:galsMzxSprURAEc2pxsmYJandiW4D+Npchx6ZiBIHkY=
 github.com/brigadecore/brigade-foundations v0.3.0/go.mod h1:edMgSJCUgfHN1RNGiiVOTRW4X4VykBLgssgWHPZK7Sg=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

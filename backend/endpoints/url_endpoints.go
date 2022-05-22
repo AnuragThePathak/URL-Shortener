@@ -40,7 +40,6 @@ func (u *UrlEndpoints) Get(w http.ResponseWriter, r *http.Request) {
 		server.InboundRequest{
 			W: w,
 			R: r,
-			ReqBodyObj: &url,
 			EndpointLogic: func() (interface{}, error) {
 				return u.Service.Get(r.Context(), url)
 			},
