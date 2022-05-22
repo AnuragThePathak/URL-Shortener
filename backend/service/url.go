@@ -1,4 +1,4 @@
-package services
+package service
 
 import (
 	"context"
@@ -24,20 +24,20 @@ type UrlService interface {
 }
 
 type urlService struct {
-	UrlStore UrlStore
-	IG       *indigo.Generator
+	urlStore UrlStore
+	ig       *indigo.Generator
 }
 
 func NewUrlService(urlStore UrlStore, ig *indigo.Generator) UrlService {
 	return &urlService{
-		UrlStore: urlStore,
-		IG:       ig,
+		urlStore: urlStore,
+		ig:       ig,
 	}
 }
 
 func (u *urlService) Generate(
 	ctx context.Context, urlStruct UrlStruct) (UrlStruct, error) {
-	exists, err := u.UrlStore.CheckIfExists(ctx, urlStruct.Url)
+	exists, err := u.urlStore.CheckIfExists(ctx, urlStruct.Url)
 	if err != nil {
 		return UrlStruct{}, err
 	}
@@ -45,11 +45,11 @@ func (u *urlService) Generate(
 		return u.Get(ctx, urlStruct)
 	}
 
-	id, err := u.IG.NextID()
+	id, err := u.ig.NextID()
 	if err != nil {
 		return UrlStruct{}, err
 	}
-	if err := u.UrlStore.Create(ctx,
+	if err := u.urlStore.Create(ctx,
 		UrlInfo{
 			Original:     urlStruct.Url,
 			Shortened:    id,
@@ -63,11 +63,11 @@ func (u *urlService) Generate(
 func (u *urlService) Get(
 	ctx context.Context, urlStruct UrlStruct,
 ) (UrlStruct, error) {
-	originalUrl, err := u.UrlStore.Get(ctx, urlStruct.Url)
+	res, err := u.urlStore.Get(ctx, urlStruct.Url)
 	if err != nil {
 		return UrlStruct{}, err
 	}
-	return UrlStruct{Url: originalUrl}, nil
+	return res, nil
 }
 
 type UrlStore interface {
@@ -75,5 +75,5 @@ type UrlStore interface {
 
 	Create(context.Context, UrlInfo) error
 
-	Get(context.Context, string) (string, error)
+	Get(context.Context, string) (UrlStruct, error)
 }

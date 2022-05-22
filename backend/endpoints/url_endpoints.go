@@ -4,12 +4,12 @@ import (
 	"net/http"
 
 	"github.com/AnuragThePathak/url-shortener/backend/server"
-	"github.com/AnuragThePathak/url-shortener/backend/services"
+	"github.com/AnuragThePathak/url-shortener/backend/service"
 	"github.com/go-chi/chi/v5"
 )
 
 type UrlEndpoints struct {
-	Service services.UrlService
+	Service service.UrlService
 }
 
 func (u *UrlEndpoints) Register(r chi.Router) {
@@ -18,7 +18,7 @@ func (u *UrlEndpoints) Register(r chi.Router) {
 }
 
 func (u *UrlEndpoints) Generate(w http.ResponseWriter, r *http.Request) {
-	url := services.UrlStruct{}
+	url := service.UrlStruct{}
 	server.ServeRequest(
 		server.InboundRequest{
 			W:          w,
@@ -33,7 +33,7 @@ func (u *UrlEndpoints) Generate(w http.ResponseWriter, r *http.Request) {
 
 func (u *UrlEndpoints) Get(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	url := services.UrlStruct{
+	url := service.UrlStruct{
 		Url: id,
 	}
 	server.ServeRequest(
