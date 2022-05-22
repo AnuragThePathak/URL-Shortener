@@ -21,13 +21,18 @@ type UrlService interface {
 	Generate(context.Context, UrlStruct) (UrlStruct, error)
 
 	Get(context.Context, UrlStruct) (UrlStruct, error)
-
-	Delete(context.Context, UrlStruct) error
 }
 
 type urlService struct {
 	UrlStore UrlStore
 	IG       *indigo.Generator
+}
+
+func NewUrlService(urlStore UrlStore, ig *indigo.Generator) UrlService {
+	return &urlService{
+		UrlStore: urlStore,
+		IG:       ig,
+	}
 }
 
 func (u *urlService) Generate(
@@ -56,7 +61,8 @@ func (u *urlService) Generate(
 }
 
 func (u *urlService) Get(
-	ctx context.Context, urlStruct UrlStruct) (UrlStruct, error) {
+	ctx context.Context, urlStruct UrlStruct,
+) (UrlStruct, error) {
 	originalUrl, err := u.UrlStore.Get(ctx, urlStruct.Url)
 	if err != nil {
 		return UrlStruct{}, err
@@ -70,6 +76,4 @@ type UrlStore interface {
 	Create(context.Context, UrlInfo) error
 
 	Get(context.Context, string) (string, error)
-
-	Delete(context.Context) error
 }
