@@ -2,12 +2,19 @@ package services
 
 import (
 	"context"
+	"time"
 
 	"github.com/osamingo/indigo"
 )
 
 type UrlStruct struct {
 	Url string `json:"url"`
+}
+
+type UrlInfo struct {
+	Original     string `json:"orginal"`
+	Shortened    string `json:"shotened"`
+	CreationTime int64  `json:"creation_time"`
 }
 
 type UrlService interface {
@@ -37,7 +44,12 @@ func (u *urlService) Generate(
 	if err != nil {
 		return UrlStruct{}, err
 	}
-	if err := u.UrlStore.Create(ctx, id); err != nil {
+	if err := u.UrlStore.Create(ctx,
+		UrlInfo{
+			Original:     urlStruct.Url,
+			Shortened:    id,
+			CreationTime: time.Now().Unix(),
+		}); err != nil {
 		return UrlStruct{}, err
 	}
 	return UrlStruct{Url: id}, nil
@@ -55,7 +67,7 @@ func (u *urlService) Get(
 type UrlStore interface {
 	CheckIfExists(context.Context, string) (bool, error)
 
-	Create(context.Context, string) error
+	Create(context.Context, UrlInfo) error
 
 	Get(context.Context, string) (string, error)
 
