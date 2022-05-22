@@ -27,6 +27,7 @@ func (u *UrlEndpoints) Generate(w http.ResponseWriter, r *http.Request) {
 			EndpointLogic: func() (interface{}, error) {
 				return u.Service.Generate(r.Context(), url)
 			},
+			SuccessCode: http.StatusCreated,
 		},
 	)
 }
@@ -43,6 +44,7 @@ func (u *UrlEndpoints) Get(w http.ResponseWriter, r *http.Request) {
 			EndpointLogic: func() (interface{}, error) {
 				return u.Service.Get(r.Context(), url)
 			},
+			SuccessCode: http.StatusTemporaryRedirect,
 		},
 	)
 }

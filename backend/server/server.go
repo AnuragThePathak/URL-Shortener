@@ -51,7 +51,7 @@ func NewServer(endpoints []Endpoints, config *ServerConfig) Server {
 		handler: cors.New(
 			cors.Options{
 				AllowCredentials: true,
-				AllowedOrigins:   []string{"foo.com"},
+				AllowedOrigins:   []string{"*"},
 				AllowedMethods:   []string{"DELETE", "GET", "POST", "PUT"},
 				AllowedHeaders:   []string{"Authorization", "Content-Type"},
 			},

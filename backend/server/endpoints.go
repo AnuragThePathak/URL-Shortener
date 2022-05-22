@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Endpoints interface {
@@ -40,11 +41,12 @@ func ServeRequest(req InboundRequest) {
 		switch {
 		case errors.Is(err, context.Canceled), errors.Is(err,
 			context.DeadlineExceeded):
-			return
+		case errors.Is(err, mongo.ErrNoDocuments):
+			WriteAPIResponse(req.W, http.StatusNotFound, err)
 		default:
 			WriteAPIResponse(req.W, http.StatusInternalServerError, err)
-			return
 		}
+		return
 	}
 
 	WriteAPIResponse(req.W, req.SuccessCode, respBodyObj)
