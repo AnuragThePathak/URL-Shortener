@@ -12,7 +12,7 @@ import (
 )
 
 func databaseConnection(ctx context.Context) (*mongo.Database, error) {
-	dbConnectionStr, err := os.GetRequiredEnvVar("DB_URL")
+	dbUrl, err := os.GetRequiredEnvVar("DB_URL")
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +20,7 @@ func databaseConnection(ctx context.Context) (*mongo.Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	dbClientOpts := options.Client().ApplyURI(dbConnectionStr)
+	dbClientOpts := options.Client().ApplyURI(dbUrl)
 
 	connectCtx, connectCancel := context.WithTimeout(ctx, 10*time.Second)
 	defer connectCancel()

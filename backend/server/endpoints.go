@@ -43,12 +43,12 @@ func ServeRequest(req InternalRequest) {
 		case errors.Is(err, context.Canceled), errors.Is(err,
 			context.DeadlineExceeded):
 		case errors.Is(err, mongo.ErrNoDocuments):
-			WriteAPIResponse(req.W, http.StatusNotFound, err)
+			WriteAPIResponse(req.W, http.StatusNotFound, nil)
 		default:
 			if _, ok := err.(*url.Error); ok {
-				WriteAPIResponse(req.W, http.StatusBadRequest, err)
+				WriteAPIResponse(req.W, http.StatusBadRequest, nil)
 			} else {
-				WriteAPIResponse(req.W, http.StatusInternalServerError, err)
+				WriteAPIResponse(req.W, http.StatusInternalServerError, nil)
 			}
 		}
 		return
