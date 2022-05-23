@@ -6,9 +6,9 @@ import (
 
 	"github.com/AnuragThePathak/my-go-packages/signals"
 	"github.com/AnuragThePathak/url-shortener/backend/endpoints"
-	"github.com/AnuragThePathak/url-shortener/backend/mongodb"
+	"github.com/AnuragThePathak/url-shortener/backend/api/mongodb"
 	"github.com/AnuragThePathak/url-shortener/backend/server"
-	"github.com/AnuragThePathak/url-shortener/backend/service"
+	"github.com/AnuragThePathak/url-shortener/backend/api"
 	"github.com/osamingo/indigo"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -24,7 +24,7 @@ func main() {
 		}
 	}
 
-	var urlStore service.UrlStore
+	var urlStore api.UrlStore
 	{
 		if urlStore, err = mongodb.NewUrlStore(database); err != nil {
 			log.Fatal(err)
@@ -37,7 +37,7 @@ func main() {
 		indigoGenerator = indigo.New(nil, indigo.StartTime(t))
 	}
 
-	urlService := service.NewUrlService(urlStore, indigoGenerator)
+	urlService := api.NewUrlService(urlStore, indigoGenerator)
 
 	var apiserver server.Server
 	{

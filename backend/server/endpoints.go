@@ -30,7 +30,7 @@ func ReadRequestBody(
 	return true
 }
 
-func ServeRequest(req InboundRequest) {
+func ServeRequest(req InternalRequest) {
 	if req.ReqBodyObj != nil {
 		if !ReadRequestBody(req.W, req.R, req.ReqBodyObj) {
 			return

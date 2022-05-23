@@ -1,10 +1,11 @@
-package service
+package api
 
 import (
 	"context"
 	"net/url"
 	"time"
 
+	"github.com/AnuragThePathak/url-shortener/backend/common"
 	"github.com/osamingo/indigo"
 )
 
@@ -46,7 +47,7 @@ func (u *urlService) Generate(
 		return UrlStruct{}, err
 	}
 	if exists {
-		res, err := u.urlStore.Get(ctx, urlStruct.Url, OrginalType)
+		res, err := u.urlStore.Get(ctx, urlStruct.Url, common.OrginalType)
 		if err != nil {
 			return UrlStruct{}, err
 		}
@@ -71,7 +72,7 @@ func (u *urlService) Generate(
 func (u *urlService) Get(
 	ctx context.Context, urlStruct UrlStruct,
 ) (UrlStruct, error) {
-	res, err := u.urlStore.Get(ctx, urlStruct.Url, ShortenedType)
+	res, err := u.urlStore.Get(ctx, urlStruct.Url, common.ShortenedType)
 	if err != nil {
 		return UrlStruct{}, err
 	}

@@ -4,7 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/AnuragThePathak/url-shortener/backend/service"
+	"github.com/AnuragThePathak/url-shortener/backend/common"
+	"github.com/AnuragThePathak/url-shortener/backend/api"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -14,9 +15,9 @@ type urlStore struct {
 	collection *mongo.Collection
 }
 
-func NewUrlStore(database *mongo.Database) (service.UrlStore, error) {
+func NewUrlStore(database *mongo.Database) (api.UrlStore, error) {
 	context, cancel :=
-		context.WithTimeout(context.Background(), createIndexTimeout)
+		context.WithTimeout(context.Background(), common.CreateIndexTimeout)
 	defer cancel()
 	isUnique := true
 	collection := database.Collection("urls")
@@ -48,17 +49,17 @@ func (u *urlStore) CheckIfExists(ctx context.Context, url string) (bool, error) 
 	return true, nil
 }
 
-func (u *urlStore) Create(ctx context.Context, urlInfo service.UrlInfo) error {
+func (u *urlStore) Create(ctx context.Context, urlInfo api.UrlInfo) error {
 	_, err := u.collection.InsertOne(ctx, urlInfo)
 	return err
 }
 
 func (u *urlStore) Get(ctx context.Context, url, urlType string) (string, error) {
 	var oppositeType string
-	if urlType == service.ShortenedType {
-		oppositeType = service.OrginalType
+	if urlType == common.ShortenedType {
+		oppositeType = common.OrginalType
 	} else {
-		oppositeType = service.ShortenedType
+		oppositeType = common.ShortenedType
 	}
 	opts := options.FindOne()
 	opts.SetProjection(bson.M{oppositeType: 1, "_id": 0})
