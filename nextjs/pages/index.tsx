@@ -1,12 +1,15 @@
 import Box from "@mui/material/Box"
 import Container from "@mui/material/Container"
+import MuiLink from '@mui/material/Link'
 import Typography from "@mui/material/Typography"
 import type { NextPage } from 'next'
 import Head from "next/head"
-import Link from "../src/Link"
 import ResponsiveAppBar from "../components/ResponsiveAppBar"
 import UrlTextInputField from "../components/UrlTextInputField"
-import Copyright from "../src/Copyright"
+import Copyright from "../components/Copyright"
+import SourceCode from "../components/SourceCode"
+import heroImage from "../public/66224.webp"
+import Image from "next/image"
 
 const Home: NextPage = () => {
   return (
@@ -32,11 +35,35 @@ const Home: NextPage = () => {
             Short URLs, Easy to Share
           </Typography>
           <UrlTextInputField />
-          
-          <Link href="/about" color="secondary">
-            Go to the about page
-          </Link>
-          <Copyright />
+
+          <Image src={heroImage} alt="share-image" placeholder="blur" 
+          height={450} width={600} />
+
+          <Typography variant="body2" >
+          <MuiLink color="inherit" href="https://www.freepik.com/vectors/data-sharing"
+			target="_blank">
+            Data sharing vector created by rawpixel.com - www.freepik.com
+          </MuiLink>
+          </Typography>
+
+          <Typography variant="h4" m={4} color="InfoText">{"This website was created by "}
+          <MuiLink href="https://twitter.com/AnuragThePathak"
+			target="_blank">
+            Anurag Pathak
+          </MuiLink>{" for learning purpose."}
+          </Typography>
+
+          <Container sx={{
+            // m: 5,
+            display: "flex",
+            justifyContent: "space-evenly",
+            flexWrap: {xs: "wrap", sm: "nowrap"},
+            bgcolor: "whitesmoke"
+          }}>
+
+            <SourceCode />
+            <Copyright />
+          </Container>
         </Box>
       </Container>
     </div>
