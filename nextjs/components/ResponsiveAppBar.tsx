@@ -26,7 +26,7 @@ const ResponsiveAppBar = () => {
 
 	return (
 		<AppBar position="static">
-			<Container maxWidth="xl">
+			<Container maxWidth="xl" >
 				<Toolbar disableGutters>
 					<AddLinkOutlinedIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
 					<Typography
@@ -39,7 +39,7 @@ const ResponsiveAppBar = () => {
 							display: { xs: 'none', md: 'flex' },
 							fontFamily: 'monospace',
 							fontWeight: 700,
-							letterSpacing: '.3rem',
+							letterSpacing: '.1rem',
 							color: 'inherit',
 							textDecoration: 'none',
 						}}
@@ -50,7 +50,7 @@ const ResponsiveAppBar = () => {
 					<Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
 						<IconButton
 							size="large"
-							aria-label="account of current user"
+							aria-label="more-options"
 							aria-controls="menu-appbar"
 							aria-haspopup="true"
 							onClick={handleOpenNavMenu}
@@ -95,7 +95,7 @@ const ResponsiveAppBar = () => {
 							flexGrow: 1,
 							fontFamily: 'monospace',
 							fontWeight: 700,
-							letterSpacing: '.3rem',
+							letterSpacing: '.1rem',
 							color: 'inherit',
 							textDecoration: 'none',
 						}}
