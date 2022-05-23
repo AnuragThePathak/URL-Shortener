@@ -12,7 +12,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Minily - URL Shortener</title>
+        <title>Minly - URL Shortener</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <Container maxWidth="xl">

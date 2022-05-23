@@ -19,11 +19,35 @@ export async function generateUrl(url: string) {
 			status: Status.ServerError
 		}
 	}
-	
 
 	const value = await response.json()
 	return {
-		message: `${location.hostname}/${value.url}`,
+		message: `${location.host}/${value.url}`,
 		status: Status.Success
+	}
+}
+
+export async function getOriginalUrl(id: string) {
+	const response = await fetch(
+		process.env.NEXT_PUBLIC_SERVER_ADDRESS as string + "/" + id)
+
+	if (response.status == 404) {
+		return {
+			message: "URL not found.",
+			status: Status.NotFound
+		}
+	}
+	if (response.status == 500) {
+		return {
+			message: "Something went wrong.",
+			status: Status.ServerError
+		}
+	}
+
+	const value = await response.json()
+	return {
+		message: "",
+		status: Status.Success,
+		url: value.url
 	}
 }

@@ -22,7 +22,7 @@ export default function UrlTextInputField() {
 					setStatus(res.status)
 					setMessage(res.message)
 				})
-				.catch(() => {
+				.catch((_err) => {
 					setStatus(Status.ServerError)
 				})
 		} else {
