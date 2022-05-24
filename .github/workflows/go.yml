@@ -1,4 +1,6 @@
 name: Go CI
+env:
+  WD: "./backend"
 
 on:
   push:
@@ -20,6 +22,7 @@ jobs:
 
     - name: Build
       run: go build -v ./...
+      working-directory: ${{env.WD}}
 
 #     - name: Test
 #       run: go test -v ./...
