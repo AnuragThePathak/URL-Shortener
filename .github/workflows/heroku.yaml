@@ -1,12 +1,11 @@
 name: Push Container to Heroku
 env:
   WD: "./backend"
-  APP_NAME: yreieow
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types:
+      - published
 
 jobs:
   build:
@@ -24,8 +23,8 @@ jobs:
     - name: Build and push
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: heroku container:push -a $APP_NAME web 
+      run: heroku container:push -a ${{secrets.HEROKU_APP_NAME}} web 
     - name: Release
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      run: heroku container:release -a $APP_NAME web 
+      run: heroku container:release -a ${{secrets.HEROKU_APP_NAME}} web 
