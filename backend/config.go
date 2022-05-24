@@ -35,7 +35,7 @@ func serverConfig() (server.ServerConfig, error) {
 	config := server.ServerConfig{}
 	var err error
 
-	config.Port, err = os.GetIntFromEnvVar("API_SERVER_PORT", 8080)
+	config.Port, err = os.GetIntFromEnvVar("PORT", 8080)
 	if err != nil {
 		return config, err
 	}
