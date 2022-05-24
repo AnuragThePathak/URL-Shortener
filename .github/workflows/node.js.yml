@@ -16,6 +16,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ${{env.WD}}
+
     strategy:
       matrix:
         node-version: [14.x, 16.x]
@@ -30,7 +34,5 @@ jobs:
         cache: 'npm'
         cache-dependency-path: '**/package-lock.json'
     - run: npm ci
-      working-directory: ${{env.WD}}
     - run: npm run build --if-present
-      working-directory: ${{env.WD}}
 #     - run: npm test
