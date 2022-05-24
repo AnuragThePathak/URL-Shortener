@@ -1,7 +1,7 @@
 name: Push Container to Heroku
 env:
   WD: "./backend"
-  APP_NAME: url-shortener
+  APP_NAME: yreieow
 
 on:
   push:
