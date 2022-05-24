@@ -46,7 +46,7 @@ const Home: NextPage = () => {
           </MuiLink>
           </Typography>
 
-          <Typography variant="h4" m={4} color="InfoText">
+          <Typography variant="h4" m={4}>
             {"This website was created by "}
           <MuiLink href="https://twitter.com/AnuragThePathak"
 			target="_blank">
