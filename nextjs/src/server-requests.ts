@@ -33,13 +33,11 @@ export async function getOriginalUrl(id: string) {
 
 	if (response.status == 404) {
 		return {
-			message: "URL not found.",
 			status: Status.NotFound
 		}
 	}
 	if (response.status == 500) {
 		return {
-			message: "Something went wrong.",
 			status: Status.ServerError
 		}
 	}

@@ -24,6 +24,7 @@ export default function UrlTextInputField() {
 				})
 				.catch((_err) => {
 					setStatus(Status.ServerError)
+					setMessage("Can't connect to server.")
 				})
 		} else {
 			setOpen(true)
@@ -69,7 +70,7 @@ export default function UrlTextInputField() {
 					onClick={handleSubmit}>Submit</Button>
 			</Container>
 
-			{message ? <Alert severity={status as AlertColUndef} sx={{
+			{status ? <Alert severity={status as AlertColUndef} sx={{
 				my: 2,
 				mx: 6
 			}} action={
@@ -83,10 +84,7 @@ export default function UrlTextInputField() {
 				</Button>
 			}>
 				{message}
-			</Alert>
-				: <Alert severity={status as AlertColUndef} sx={{
-					visibility: "hidden"
-				}}></Alert>}
+			</Alert> : <></>}
 
 			<Snackbar
 				open={open}

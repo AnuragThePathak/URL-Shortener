@@ -6,6 +6,7 @@ import notFoundPic from "../public/2696450.webp"
 export default function PageNotFound() {
 	return (
 		<>
+			<Typography variant="h2">URL not found.</Typography>
 			<Image src={notFoundPic} alt="404" placeholder="blur" />
 			<Typography variant="body2" color="text.secondary" align="center">
 				<MuiLink color="inherit" href="https://www.freepik.com/vectors/404-page"

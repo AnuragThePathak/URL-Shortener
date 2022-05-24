@@ -46,14 +46,15 @@ const Home: NextPage = () => {
           </MuiLink>
           </Typography>
 
-          <Typography variant="h4" m={4} color="InfoText">{"This website was created by "}
+          <Typography variant="h4" m={4} color="InfoText">
+            {"This website was created by "}
           <MuiLink href="https://twitter.com/AnuragThePathak"
 			target="_blank">
             Anurag Pathak
           </MuiLink>{" for learning purpose."}
           </Typography>
 
-          <Container sx={{
+          <Box sx={{
             // m: 5,
             display: "flex",
             justifyContent: "space-evenly",
@@ -63,7 +64,7 @@ const Home: NextPage = () => {
 
             <SourceCode />
             <Copyright />
-          </Container>
+          </Box>
         </Box>
       </Container>
     </div>
