@@ -3,9 +3,9 @@ env:
   WD: "./nextjs"
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types:
+      - published
 
 jobs:
   deploy:
