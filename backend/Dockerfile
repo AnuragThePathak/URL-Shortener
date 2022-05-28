@@ -1,15 +1,15 @@
-FROM golang:1.18.2-alpine
+FROM golang:1.18.2-alpine3.16 AS builder
 
 WORKDIR /app
-
 COPY go.mod ./
 COPY go.sum ./
 RUN go mod download
-
 COPY . ./
+RUN go build -o /binary
 
-RUN go build -o /my-server
+FROM alpine:3.16
 
-EXPOSE 8080
+WORKDIR /app
+COPY --from=builder /binary ./
 
-CMD [ "/my-server" ]
+CMD [ "./binary" ]
