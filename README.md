@@ -9,6 +9,5 @@
 
 - For the frontend, Nextjs is used with Material UI.
 - Backend is created using Golang (no framework used). For the database, we are using MongoDB atlas.
-- At this moment, there are no tests available, but the backend ones are expected to add them soon.
 - Frontend is hosted in [Vercel](https://mly.vercel.app/) and the backend on Heroku.
 - For CI/CD, Github action is being used. No manual deploy/integration tests are required.
