@@ -39,7 +39,7 @@ func serverConfig() (server.ServerConfig, error) {
 	if err != nil {
 		return config, err
 	}
-	log.Println("API_SERVER_PORT: ", config.Port)
+	log.Println("PORT: ", config.Port)
 	config.TLSEnabled, err = os.GetBoolFromEnvVar("TLS_ENABLED", false)
 	if err != nil {
 		return config, err
