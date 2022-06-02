@@ -12,4 +12,4 @@ FROM alpine:3.16
 WORKDIR /app
 COPY --from=builder /binary ./
 
-ENTRYPOINT [ "binary" ]
+CMD [ "./binary" ]
