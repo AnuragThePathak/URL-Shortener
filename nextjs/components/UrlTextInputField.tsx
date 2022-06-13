@@ -5,6 +5,7 @@ import { Alert, AlertColor, Button, Container, IconButton, Snackbar } from "@mui
 import { FormEvent, Fragment, SyntheticEvent, useState } from "react"
 import { generateUrl } from "../src/server-requests"
 import Status from "../src/status-types"
+import checkUrlValidity from "../src/url-utilities"
 
 export default function UrlTextInputField() {
 	const [open, setOpen] = useState(false)
@@ -16,16 +17,20 @@ export default function UrlTextInputField() {
 		e.preventDefault()
 
 		if (url) {
-			setUrl("")
-			generateUrl(url)
-				.then((res) => {
-					setStatus(res.status)
-					setMessage(res.message)
-				})
-				.catch((_err) => {
-					setStatus(Status.ServerError)
-					setMessage("Can't connect to server.")
-				})
+			if (checkUrlValidity(url)) {
+				setUrl("")
+				generateUrl(url)
+					.then((res) => {
+						setStatus(res.status)
+						setMessage(res.message)
+					})
+					.catch((_err) => {
+						setStatus(Status.ServerError)
+						setMessage("Can't connect to server.")
+					})
+			}
+			setStatus(Status.InvalidRequest)
+			setMessage("Invalid URL.")
 		} else {
 			setOpen(true)
 		}
