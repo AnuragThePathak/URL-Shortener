@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"net"
 	"net/url"
 	"time"
 
@@ -39,9 +40,17 @@ func NewUrlService(urlStore UrlStore, ig *indigo.Generator) UrlService {
 
 func (u *urlService) Generate(
 	ctx context.Context, urlStruct UrlStruct) (UrlStruct, error) {
-	if _, err := url.ParseRequestURI(urlStruct.Url); err != nil {
+	if urlObject, err := url.ParseRequestURI(urlStruct.Url); err != nil {
 		return UrlStruct{}, err
+	} else {
+		if urlObject.Scheme != "http" && urlObject.Scheme != "https" {
+			return UrlStruct{}, &url.Error{URL: urlStruct.Url}
+		}
+		if _, err := net.LookupIP(urlObject.Host); err != nil {
+			return UrlStruct{}, &url.Error{URL: urlStruct.Url}
+		}
 	}
+	
 	exists, err := u.urlStore.CheckIfExists(ctx, urlStruct.Url)
 	if err != nil {
 		return UrlStruct{}, err
