@@ -8,16 +8,16 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-type UrlEndpoints struct {
+type URLEndpoints struct {
 	Service api.UrlService
 }
 
-func (u *UrlEndpoints) Register(r chi.Router) {
+func (u *URLEndpoints) Register(r chi.Router) {
 	r.Post("/", u.Generate)
 	r.Get("/{id}", u.Get)
 }
 
-func (u *UrlEndpoints) Generate(w http.ResponseWriter, r *http.Request) {
+func (u *URLEndpoints) Generate(w http.ResponseWriter, r *http.Request) {
 	url := api.UrlStruct{}
 	server.ServeRequest(
 		server.InternalRequest{
@@ -32,7 +32,7 @@ func (u *UrlEndpoints) Generate(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-func (u *UrlEndpoints) Get(w http.ResponseWriter, r *http.Request) {
+func (u *URLEndpoints) Get(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	url := api.UrlStruct{
 		Url: id,

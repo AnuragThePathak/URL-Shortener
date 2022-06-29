@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/AnuragThePathak/my-go-packages/signals"
-	"github.com/AnuragThePathak/url-shortener/backend/endpoints"
-	"github.com/AnuragThePathak/url-shortener/backend/api/mongodb"
-	"github.com/AnuragThePathak/url-shortener/backend/server"
 	"github.com/AnuragThePathak/url-shortener/backend/api"
+	"github.com/AnuragThePathak/url-shortener/backend/api/mongodb"
+	"github.com/AnuragThePathak/url-shortener/backend/endpoints"
+	"github.com/AnuragThePathak/url-shortener/backend/server"
 	"github.com/osamingo/indigo"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -46,7 +46,7 @@ func main() {
 			log.Fatal(err)
 		}
 		apiserver = server.NewServer([]server.Endpoints{
-			&endpoints.UrlEndpoints{
+			&endpoints.URLEndpoints{
 				Service: urlService,
 			},
 		}, &apiserverConfig)

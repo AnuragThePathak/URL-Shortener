@@ -5,18 +5,18 @@ import (
 	"log"
 	"time"
 
+	"github.com/AnuragThePathak/my-go-packages/os"
 	"github.com/AnuragThePathak/url-shortener/backend/server"
-	"github.com/brigadecore/brigade-foundations/os"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func databaseConnection(ctx context.Context) (*mongo.Database, error) {
-	dbUrl, err := os.GetRequiredEnvVar("DB_URL")
+	dbUrl, err := os.GetEnv("DB_URL")
 	if err != nil {
 		return nil, err
 	}
-	dbName, err := os.GetRequiredEnvVar("DB_NAME")
+	dbName, err := os.GetEnv("DB_NAME")
 	if err != nil {
 		return nil, err
 	}
@@ -35,23 +35,23 @@ func serverConfig() (server.ServerConfig, error) {
 	config := server.ServerConfig{}
 	var err error
 
-	config.Port, err = os.GetIntFromEnvVar("PORT", 8080)
+	config.Port, err = os.GetEnvAsInt("PORT", 8080)
 	if err != nil {
 		return config, err
 	}
 	log.Println("PORT: ", config.Port)
-	config.TLSEnabled, err = os.GetBoolFromEnvVar("TLS_ENABLED", false)
+	config.TLSEnabled, err = os.GetEnvAsBool("TLS_ENABLED", false)
 	if err != nil {
 		return config, err
 	}
 	log.Println("TLS_ENABLED: ", config.TLSEnabled)
 	if config.TLSEnabled {
-		config.TLSCertPath, err = os.GetRequiredEnvVar("TLS_CERT_PATH")
+		config.TLSCertPath, err = os.GetEnv("TLS_CERT_PATH")
 		if err != nil {
 			return config, err
 		}
 		log.Println("TLS_CERT_PATH: ", config.TLSCertPath)
-		config.TLSKeyPath, err = os.GetRequiredEnvVar("TLS_KEY_PATH")
+		config.TLSKeyPath, err = os.GetEnv("TLS_KEY_PATH")
 		if err != nil {
 			return config, err
 		}
