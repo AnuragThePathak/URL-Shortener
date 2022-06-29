@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"net"
 	"net/url"
 	"time"
@@ -41,31 +42,33 @@ func NewUrlService(urlStore UrlStore, ig *indigo.Generator) UrlService {
 func (u *urlService) Generate(
 	ctx context.Context, urlStruct UrlStruct) (UrlStruct, error) {
 	if urlObject, err := url.ParseRequestURI(urlStruct.Url); err != nil {
-		return UrlStruct{}, err
+		return UrlStruct{}, fmt.Errorf("error parsing url: %w", err)
 	} else {
 		if urlObject.Scheme != "http" && urlObject.Scheme != "https" {
-			return UrlStruct{}, &url.Error{URL: urlStruct.Url}
+			return UrlStruct{}, fmt.Errorf("url scheme must be http or https %w",
+				&url.Error{URL: urlStruct.Url})
 		}
 		if _, err := net.LookupIP(urlObject.Host); err != nil {
-			return UrlStruct{}, &url.Error{URL: urlStruct.Url}
+			return UrlStruct{}, fmt.Errorf("error looking up host: %w",
+				&url.Error{URL: urlStruct.Url})
 		}
 	}
-	
+
 	exists, err := u.urlStore.CheckIfExists(ctx, urlStruct.Url)
 	if err != nil {
-		return UrlStruct{}, err
+		return UrlStruct{}, fmt.Errorf("error checking if url exists: %w", err)
 	}
 	if exists {
 		res, err := u.urlStore.Get(ctx, urlStruct.Url, common.OrginalType)
 		if err != nil {
-			return UrlStruct{}, err
+			return UrlStruct{}, fmt.Errorf("error getting url: %w", err)
 		}
 		return UrlStruct{Url: res}, nil
 	}
 
 	id, err := u.ig.NextID()
 	if err != nil {
-		return UrlStruct{}, err
+		return UrlStruct{}, fmt.Errorf("error generating id: %w", err)
 	}
 	if err := u.urlStore.Create(ctx,
 		UrlInfo{
@@ -73,7 +76,7 @@ func (u *urlService) Generate(
 			Shortened:    id,
 			CreationTime: time.Now().Unix(),
 		}); err != nil {
-		return UrlStruct{}, err
+		return UrlStruct{}, fmt.Errorf("error creating url: %w", err)
 	}
 	return UrlStruct{Url: id}, nil
 }
@@ -83,7 +86,7 @@ func (u *urlService) Get(
 ) (UrlStruct, error) {
 	res, err := u.urlStore.Get(ctx, urlStruct.Url, common.ShortenedType)
 	if err != nil {
-		return UrlStruct{}, err
+		return UrlStruct{}, fmt.Errorf("error getting url: %w", err)
 	}
 	return UrlStruct{Url: res}, nil
 }

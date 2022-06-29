@@ -3,9 +3,10 @@ package mongodb
 import (
 	"context"
 	"errors"
+	"fmt"
 
-	"github.com/AnuragThePathak/url-shortener/backend/common"
 	"github.com/AnuragThePathak/url-shortener/backend/api"
+	"github.com/AnuragThePathak/url-shortener/backend/common"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -41,7 +42,7 @@ func (u *urlStore) CheckIfExists(ctx context.Context, url string) (bool, error) 
 	opts.SetLimit(1)
 	count, err := u.collection.CountDocuments(ctx, bson.M{"original": url}, opts)
 	if err != nil {
-		return true, err
+		return true, fmt.Errorf("error checking if url exists: %w", err)
 	}
 	if count == 0 {
 		return false, nil
@@ -51,7 +52,7 @@ func (u *urlStore) CheckIfExists(ctx context.Context, url string) (bool, error) 
 
 func (u *urlStore) Create(ctx context.Context, urlInfo api.UrlInfo) error {
 	_, err := u.collection.InsertOne(ctx, urlInfo)
-	return err
+	return fmt.Errorf("error creating url in mongodb: %w", err)
 }
 
 func (u *urlStore) Get(ctx context.Context, url, urlType string) (string, error) {
@@ -67,7 +68,7 @@ func (u *urlStore) Get(ctx context.Context, url, urlType string) (string, error)
 	var res bson.M
 	if err := u.collection.FindOne(ctx, bson.M{urlType: url}, opts).
 		Decode(&res); err != nil {
-		return "", err
+		return "", fmt.Errorf("error getting url from mongodb: %w", err)
 	}
 	str, isString := res[oppositeType].(string)
 	if !isString {

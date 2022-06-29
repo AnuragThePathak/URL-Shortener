@@ -41,14 +41,14 @@ func ServeRequest(req InternalRequest, logger *zap.Logger) {
 	respBodyObj, err := req.EndpointLogic()
 	if err != nil {
 		switch {
-		case errors.Is(err, context.Canceled), errors.Is(err,
-			context.DeadlineExceeded):
+		case errors.Is(errors.Unwrap(err), context.Canceled),
+			errors.Is(errors.Unwrap(err), context.DeadlineExceeded):
 			logger.Debug("Request timed out", zap.Error(err))
-		case errors.Is(err, mongo.ErrNoDocuments):
+		case errors.Is(errors.Unwrap(err), mongo.ErrNoDocuments):
 			WriteAPIResponse(req.W, http.StatusNotFound, nil)
 			logger.Debug("Request not found", zap.Error(err))
 		default:
-			if _, ok := err.(*url.Error); ok {
+			if _, ok := errors.Unwrap(err).(*url.Error); ok {
 				WriteAPIResponse(req.W, http.StatusBadRequest, nil)
 				logger.Debug("Request invalid", zap.Error(err))
 				return
