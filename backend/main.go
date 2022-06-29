@@ -11,11 +11,20 @@ import (
 	"github.com/AnuragThePathak/url-shortener/backend/server"
 	"github.com/osamingo/indigo"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 )
 
 func main() {
 	ctx := signals.Context()
 	var err error
+
+	var logger *zap.Logger
+	{
+		config := zapConfig()
+		if logger, err = config.Build(); err != nil {
+			log.Fatal(err)
+		}
+	}
 
 	var database *mongo.Database
 	{
@@ -41,15 +50,16 @@ func main() {
 
 	var apiserver server.Server
 	{
-		apiserverConfig, err := serverConfig()
+		apiserverConfig, err := serverConfig(logger)
 		if err != nil {
 			log.Fatal(err)
 		}
 		apiserver = server.NewServer([]server.Endpoints{
 			&endpoints.URLEndpoints{
 				Service: urlService,
+				Logger: logger,
 			},
-		}, &apiserverConfig)
+		}, &apiserverConfig, logger)
 	}
 
 	apiserver.ListenAndServe()

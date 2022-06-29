@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,6 +12,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"go.uber.org/zap"
 )
 
 type ServerConfig struct {
@@ -28,10 +28,11 @@ type Server interface {
 
 type server struct {
 	handler http.Handler
+	logger  *zap.Logger
 	config  ServerConfig
 }
 
-func NewServer(endpoints []Endpoints, config *ServerConfig) Server {
+func NewServer(endpoints []Endpoints, config *ServerConfig, logger *zap.Logger) Server {
 	if config == nil {
 		config = &ServerConfig{}
 	}
@@ -48,6 +49,7 @@ func NewServer(endpoints []Endpoints, config *ServerConfig) Server {
 
 	return &server{
 		config: *config,
+		logger: logger,
 		handler: cors.New(
 			cors.Options{
 				AllowCredentials: true,
@@ -74,7 +76,7 @@ func (s *server) ListenAndServe() {
 		syscall.SIGQUIT)
 	go func() {
 		<-sig
-		log.Println("Shutting down server...")
+		s.logger.Info("Received signal, shutting down server")
 
 		// Shutdown signal with grace period of 30 seconds
 		shutdownCtx, cancel := context.WithTimeout(serverCtx, 30*time.Second)
@@ -83,21 +85,21 @@ func (s *server) ListenAndServe() {
 		go func() {
 			<-shutdownCtx.Done()
 			if shutdownCtx.Err() == context.DeadlineExceeded {
-				log.Fatal("graceful shutdown timed out.. forcing exit.")
+				s.logger.Info("graceful shutdown timed out.. forcing exit.")
 			}
 		}()
 
 		// Trigger graceful shutdown
 		err := server.Shutdown(shutdownCtx)
 		if err != nil {
-			log.Fatal(err)
+			s.logger.Fatal("Server graceful shutdown failed", zap.Error(err))
 		}
 		serverStopCtx()
 	}()
 
 	// Run the server
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Fatal(err)
+		s.logger.Fatal("Server failed to start", zap.Error(err))
 	}
 
 	// Wait for server context to be stopped

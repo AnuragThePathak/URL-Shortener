@@ -6,10 +6,12 @@ import (
 	"github.com/AnuragThePathak/url-shortener/backend/api"
 	"github.com/AnuragThePathak/url-shortener/backend/server"
 	"github.com/go-chi/chi/v5"
+	"go.uber.org/zap"
 )
 
 type URLEndpoints struct {
 	Service api.UrlService
+	Logger *zap.Logger
 }
 
 func (u *URLEndpoints) Register(r chi.Router) {
@@ -29,6 +31,7 @@ func (u *URLEndpoints) Generate(w http.ResponseWriter, r *http.Request) {
 			},
 			SuccessCode: http.StatusCreated,
 		},
+		u.Logger,
 	)
 }
 
@@ -46,5 +49,6 @@ func (u *URLEndpoints) Get(w http.ResponseWriter, r *http.Request) {
 			},
 			SuccessCode: http.StatusTemporaryRedirect,
 		},
+		u.Logger,
 	)
 }

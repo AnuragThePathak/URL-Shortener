@@ -8,6 +8,7 @@ import (
 	"github.com/AnuragThePathak/url-shortener/backend/server"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.uber.org/zap"
 )
 
 func Test_databaseConnection(t *testing.T) {
@@ -144,7 +145,11 @@ func Test_serverConfig(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(_ *testing.T) {
 			test.setup()
-			config, err := serverConfig()
+			logger, err := zap.NewDevelopment()
+			if err != nil {
+				t.FailNow()
+			}
+			config, err := serverConfig(logger)
 			test.assertions(config, err)
 		})
 	}

@@ -9,6 +9,7 @@ import (
 	"github.com/AnuragThePathak/url-shortener/backend/server"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 )
 
 func databaseConnection(ctx context.Context) (*mongo.Database, error) {
@@ -31,7 +32,7 @@ func databaseConnection(ctx context.Context) (*mongo.Database, error) {
 	return client.Database(dbName), nil
 }
 
-func serverConfig() (server.ServerConfig, error) {
+func serverConfig(logger *zap.Logger) (server.ServerConfig, error) {
 	config := server.ServerConfig{}
 	var err error
 
@@ -39,23 +40,33 @@ func serverConfig() (server.ServerConfig, error) {
 	if err != nil {
 		return config, err
 	}
-	log.Println("PORT: ", config.Port)
+	logger.Debug("PORT:", zap.Int("port", config.Port))
 	config.TLSEnabled, err = os.GetEnvAsBool("TLS_ENABLED", false)
 	if err != nil {
 		return config, err
 	}
-	log.Println("TLS_ENABLED: ", config.TLSEnabled)
+	logger.Debug("TLS_ENABLED:", zap.Bool("tlsEnabled", config.TLSEnabled))
 	if config.TLSEnabled {
 		config.TLSCertPath, err = os.GetEnv("TLS_CERT_PATH")
 		if err != nil {
 			return config, err
 		}
-		log.Println("TLS_CERT_PATH: ", config.TLSCertPath)
+		logger.Debug("TLS_CERT_PATH:", zap.String("tlsCertPath",
+			config.TLSCertPath))
 		config.TLSKeyPath, err = os.GetEnv("TLS_KEY_PATH")
 		if err != nil {
 			return config, err
 		}
-		log.Println("TLS_KEY_PATH: ", config.TLSKeyPath)
+		logger.Debug("TLS_KEY_PATH:", zap.String("tlsKeyPath", config.TLSKeyPath))
 	}
 	return config, nil
+}
+
+func zapConfig() zap.Config {
+	env, _ := os.GetEnv("ENV")
+	log.Println("ENV:", env)
+	if env == "production" {
+		return zap.NewProductionConfig()
+	}
+	return zap.NewDevelopmentConfig()
 }
