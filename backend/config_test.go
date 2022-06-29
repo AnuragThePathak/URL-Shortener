@@ -22,7 +22,7 @@ func Test_databaseConnection(t *testing.T) {
 			setup: func() {},
 			assertions: func(_ *mongo.Database, err error) {
 				require.Error(t, err)
-				require.Contains(t, err.Error(), "value not found for")
+				require.Contains(t, err.Error(), "is not set")
 				require.Contains(t, err.Error(), "DB_URL")
 			},
 		},
@@ -33,7 +33,7 @@ func Test_databaseConnection(t *testing.T) {
 			},
 			assertions: func(_ *mongo.Database, err error) {
 				require.Error(t, err)
-				require.Contains(t, err.Error(), "value not found for")
+				require.Contains(t, err.Error(), "is not set")
 				require.Contains(t, err.Error(), "DB_NAME")
 			},
 		},
@@ -71,7 +71,7 @@ func Test_serverConfig(t *testing.T) {
 			},
 			assertions: func(_ server.ServerConfig, err error) {
 				require.Error(t, err)
-				require.Contains(t, err.Error(), "was not parsable as an int")
+				require.Contains(t, err.Error(), "can't be parsed as an integer")
 				require.Contains(t, err.Error(), "PORT")
 			},
 		},
@@ -83,7 +83,7 @@ func Test_serverConfig(t *testing.T) {
 			},
 			assertions: func(_ server.ServerConfig, err error) {
 				require.Error(t, err)
-				require.Contains(t, err.Error(), "was not parsable as a bool")
+				require.Contains(t, err.Error(), "can't be parsed as a boolean")
 				require.Contains(t, err.Error(), "TLS_ENABLED")
 			},
 		},
@@ -109,7 +109,7 @@ func Test_serverConfig(t *testing.T) {
 			},
 			assertions: func(_ server.ServerConfig, err error) {
 				require.Error(t, err)
-				require.Contains(t, err.Error(), "value not found for")
+				require.Contains(t, err.Error(), "is not set")
 				require.Contains(t, err.Error(), "TLS_CERT_PATH")
 			},
 		},
@@ -120,7 +120,7 @@ func Test_serverConfig(t *testing.T) {
 			},
 			assertions: func(_ server.ServerConfig, err error) {
 				require.Error(t, err)
-				require.Contains(t, err.Error(), "value not found for")
+				require.Contains(t, err.Error(), "is not set")
 				require.Contains(t, err.Error(), "TLS_KEY_PATH")
 			},
 		},
@@ -142,13 +142,14 @@ func Test_serverConfig(t *testing.T) {
 		},
 	}
 
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		t.FailNow()
+	}
+
 	for _, test := range tests {
 		t.Run(test.name, func(_ *testing.T) {
 			test.setup()
-			logger, err := zap.NewDevelopment()
-			if err != nil {
-				t.FailNow()
-			}
 			config, err := serverConfig(logger)
 			test.assertions(config, err)
 		})
