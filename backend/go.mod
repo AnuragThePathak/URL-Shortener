@@ -6,6 +6,7 @@ require github.com/osamingo/indigo v1.1.0
 
 require (
 	github.com/klauspost/compress v1.15.7 // indirect
+	github.com/stretchr/objx v0.4.0 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.1 // indirect
